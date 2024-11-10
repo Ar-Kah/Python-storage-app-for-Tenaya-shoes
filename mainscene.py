@@ -15,6 +15,7 @@ class PandasApp():
     def __init__(self, master) -> None:
         self.frame = tk.Frame(master)
         self.frame.pack(fill='x', side='top')
+        self.frame.pack_propagate(False)
 
         data = read_json()
         df = pd.DataFrame(data)
@@ -23,6 +24,12 @@ class PandasApp():
         self.table = Table(self.frame, dataframe=df, showstatusbar=True, showtoolbar=True)
         self.table.rowheight = 30
 
+        self.button_frame = tk.Frame(self.frame)
+        self.button_frame.pack(side="bottom", fill="x", pady=10)  # Position it at the bottom
+
+        # Add "Add" button inside the button frame
+        self.add_button = tk.Button(self.button_frame, text="Add", command=self.open_add_window)
+        self.add_button.pack(side='left', padx=10)  # Position the button on the left of the frame
 
         # Adjust the table to the current window size
         self.table.show()
