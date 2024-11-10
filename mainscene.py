@@ -43,7 +43,11 @@ def read_json():
         data = json.load(storage)
         return data
 
-root = tk.Tk()
-root.geometry("1500x1000")
-app = PandasApp(root)
-root.mainloop()
+def main():
+    root = tk.Tk()
+    root.geometry("1500x1000")
+    app = PandasApp(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
