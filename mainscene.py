@@ -105,7 +105,7 @@ class PandasApp:
 
     def open_add_window(self):
         """Open the 'Add' window."""
-        AddWindow(self.frame, self.refresh_table)  # Create and show the AddWindow
+        AddWindow(self.frame, self.refresh_table())  # Create and show the AddWindow
 
     def refresh_table(self):
         """Reloads the data from varasto.json and refreshes the table display."""
