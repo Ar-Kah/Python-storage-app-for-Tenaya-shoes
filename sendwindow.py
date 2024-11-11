@@ -1,5 +1,6 @@
 import tkinter as tk
 import json
+from invoice_generator import InvoiceGenerator
 
 """
 TODO: make the logic for invoice making and make if statements so that the storage cant go to minus.
@@ -143,9 +144,15 @@ class SendWindow:
         except json.JSONDecodeError:
             print(
                 "Error decoding JSON from 'Jsonfiles/varasto.json'. The file may be corrupt or incorrectly formatted.")
-
-        # Call the refresh callback after saving changes
-        self.refresh_callback()
-
-        # Close the add window
-        self.send_window.destroy()
+        items = [
+            {"quantity": 1, "description": "Front and rear brake cables", "unit_price": 100.00},
+            {"quantity": 2, "description": "New set of pedal arms", "unit_price": 15.00},
+            {"quantity": 3, "description": "Labor 3hrs", "unit_price": 5.00},
+        ]
+        recipient = {
+            "name": "John Smith",
+            "address": "2 Court Square",
+            "city": "New York, NY 12210",
+        }
+        invoice = InvoiceGenerator(items, recipient, output_file="sample_invoice.pdf")
+        invoice.generate()
