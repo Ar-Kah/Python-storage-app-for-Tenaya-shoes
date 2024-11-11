@@ -1,6 +1,11 @@
 import tkinter as tk
 import json
 
+"""
+TODO: make the logic for invoice making and make if statements so that the storage cant go to minus.
+Also dont update the json file untill the invoice is made
+"""
+
 
 def read_barcode_from_json(barcode):
     """
@@ -29,18 +34,14 @@ def read_barcode_from_json(barcode):
         print("File not found")
     except json.JSONDecodeError:
         print("There was an error with the json syntax")
+    return False, "", ""
 
 
-class AddWindow:
+class SendWindow:
     def __init__(self, parent, refresh_callback):
-        """
-        This window is used to add shoes into the storage
-        :param parent: the parent window
-        :param refresh_callback: function to update the table in the parent window
-        """
-        self.add_window = tk.Toplevel(parent)  # Create a new window
-        self.add_window.title("Add Items")
-        self.add_window.geometry("400x400")
+        self.send_window = tk.Toplevel(parent)  # create new window
+        self.send_window.title("Send Items")
+        self.send_window.geometry("400x400")
 
         # Store the callback function
         self.refresh_callback = refresh_callback
@@ -60,12 +61,12 @@ class AddWindow:
 
     def create_label(self):
         """Create the label that instructs the user to scan barcodes."""
-        label = tk.Label(self.add_window, text="Start adding shoes by scanning barcodes")
+        label = tk.Label(self.send_window, text="Start adding shoes by scanning barcodes")
         label.pack(pady=20)
 
     def create_entry(self):
         """Create the Entry widget where the barcode is scanned."""
-        self.entry = tk.Entry(self.add_window)
+        self.entry = tk.Entry(self.send_window)
         self.entry.pack(pady=10)
 
         # Bind the Entry widget to capture barcode input
@@ -77,12 +78,12 @@ class AddWindow:
         self.items = []
         self.list_items = tk.Variable(value=self.items)
 
-        self.listbox = tk.Listbox(self.add_window, listvariable=self.list_items)
+        self.listbox = tk.Listbox(self.send_window, listvariable=self.list_items)
         self.listbox.pack(pady=10)
 
     def create_buttons(self):
         """Create buttons to add shoes and close the window."""
-        close_button = tk.Button(self.add_window, text="Add shoes", command=self.save_and_close)
+        close_button = tk.Button(self.send_window, text="Make invoice", command=self.save_and_close)
         close_button.pack(pady=10)
 
     def read_entry(self, event):
@@ -121,9 +122,9 @@ class AddWindow:
                     if shoe_entry["name"] == shoe_name:
                         # If the size exists within the shoe entry, increment it
                         if size in shoe_entry:
-                            shoe_entry[size] += 1
+                            shoe_entry[size] -= 1
                             # Optionally, increment the total count as well
-                            shoe_entry["Total"] += 1
+                            shoe_entry["Total"] -= 1
                             print(f"Updated {shoe_name} size {size} to {shoe_entry[size]}")
                         else:
                             print(f"Size '{size}' not found for shoe '{shoe_name}' in data.")
@@ -147,4 +148,4 @@ class AddWindow:
         self.refresh_callback()
 
         # Close the add window
-        self.add_window.destroy()
+        self.send_window.destroy()
