@@ -1,145 +1,137 @@
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
-from reportlab.lib.units import inch
+from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
-import datetime
 
 
 class InvoiceGenerator:
-    def __init__(self, items, recipient, output_file="invoice.pdf"):
-        """
-        Initialize the InvoiceGenerator with the required data.
-
-        Args:
-            items (list of dict): List of items, where each item is a dict with 'quantity', 'description', and 'unit_price'.
-            recipient (dict): Recipient info with keys 'name', 'address', and 'city'.
-            output_file (str): The file name for the generated PDF.
-        """
+    def __init__(self, items, output_file="invoice.pdf"):
         self.items = items
-        self.recipient = recipient
         self.output_file = output_file
         self.total = 0
-        self.tax_rate = 0.0625  # Example tax rate of 6.25%
+        self.tax_rate = 0.24  # 24% tax rate as per the example
 
     def generate(self):
-        """Generate the invoice PDF."""
         c = canvas.Canvas(self.output_file, pagesize=A4)
         width, height = A4
 
-        # Draw the static parts of the invoice (headers, company info, etc.)
         self.draw_header(c, width, height)
-        self.draw_recipient_info(c, width, height)
-        self.draw_table(c, width, height)
+        self.draw_recipient_sender_info(c, width, height)
+        self.draw_invoice_details(c, width, height)
+        self.draw_extra_info_box(c, width, height)
+        self.draw_item_table(c, width, height)
         self.draw_footer(c, width)
 
-        # Save the PDF
         c.save()
 
     def draw_header(self, c, width, height):
-        """Draws the header section including the logo and company info."""
-        c.setFont("Helvetica-Bold", 30)
-        c.drawString(40, height - 80, "invoice")
-
-        # Company logo placeholder
-        c.setFillColor(colors.grey)
-        c.circle(width - 80, height - 80, 30, fill=1)
-        c.setFillColor(colors.black)
+        # Draws the main header with sender information
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(20 * mm, height - 20 * mm, "Laskuttava Yritys Oy")
         c.setFont("Helvetica", 10)
-        c.drawString(width - 95, height - 85, "LOGO")
+        c.drawString(20 * mm, height - 25 * mm, "Laskuttajantie 10")
+        c.drawString(20 * mm, height - 30 * mm, "123456 Laskutus")
 
-        # Company Info
-        c.setFont("Helvetica", 10)
-        c.drawString(40, height - 120, "FROM")
+        # Invoice title
+        c.setFont("Helvetica-Bold", 16)
+        c.drawString(120 * mm, height - 20 * mm, "LASKU")
+
+    def draw_recipient_sender_info(self, c, width, height):
+        # Draws recipient and sender information
         c.setFont("Helvetica-Bold", 10)
-        c.drawString(40, height - 135, "East Repair Inc.")
+        c.drawString(20 * mm, height - 45 * mm, "Asiakkaan Yritys Oy")
         c.setFont("Helvetica", 10)
-        c.drawString(40, height - 150, "1912 Harvest Lane")
-        c.drawString(40, height - 165, "New York, NY 12210")
+        c.drawString(20 * mm, height - 50 * mm, "Asiakkaantie 10")
+        c.drawString(20 * mm, height - 55 * mm, "123456 Asiakas")
 
-        # Invoice Details
-        c.setFont("Helvetica-Bold", 10)
-        c.drawString(width - 200, height - 120, "INVOICE #")
-        c.drawString(width - 200, height - 135, "INVOICE DATE")
-        c.drawString(width - 200, height - 150, "P.O. #")
-        c.drawString(width - 200, height - 165, "DUE DATE")
+    def draw_invoice_details(self, c, width, height):
+        # Draws invoice-specific details
+        details = [
+            ["Laskun päivays:", "1.1.2016"],
+            ["Laskunumero:", "123"],
+            ["Maksuehto:", "14 pv netto"],
+            ["Eräpäivä:", "15.1.2016"],
+            ["Viivästyskorko:", "8 %"],
+            ["Asiakkaan Y-tunnus:", "124567-8"],
+            ["Viitteemme:", "Matti Myyjä"],
+            ["Viitteenne:", "Olli Ostaja"],
+            ["Toimitusehto:", "vapaasti varastosta"]
+        ]
 
-        c.setFont("Helvetica", 10)
-        c.drawString(width - 100, height - 120, "US-001")
-        c.drawString(width - 100, height - 135, datetime.datetime.now().strftime("%d/%m/%Y"))
-        c.drawString(width - 100, height - 150, "2312/2023")
-        c.drawString(width - 100, height - 165, "30/12/2023")
+        table_data = [[f"{label} {value}"] for label, value in details]
+        table = Table(table_data, colWidths=[85 * mm, 85 * mm])
+        table.setStyle(TableStyle([
+            ('FONT', (0, 0), (-1, -1), 'Helvetica', 9),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('GRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
 
-    def draw_recipient_info(self, c, width, height):
-        """Draws the recipient info in the BILL TO and SHIP TO sections."""
-        c.setFont("Helvetica-Bold", 10)
-        c.drawString(40, height - 200, "BILL TO")
-        c.drawString(width / 2 + 40, height - 200, "SHIP TO")
+        # Adjusted position to avoid overlap with the title
+        table.wrapOn(c, width, height)
+        table.drawOn(c, 100 * mm, height - 85 * mm)
 
-        c.setFont("Helvetica", 10)
-        # BILL TO section
-        c.drawString(40, height - 215, self.recipient['name'])
-        c.drawString(40, height - 230, self.recipient['address'])
-        c.drawString(40, height - 245, self.recipient['city'])
+    def draw_extra_info_box(self, c, width, height):
+        # Box for additional information
+        c.setFont("Helvetica", 9)
+        c.drawString(20 * mm, height - 108 * mm, "Lisätietoja voi kirjoittaa tähän kenttään")
+        c.rect(20 * mm, height - 115 * mm, 170 * mm, 10 * mm, stroke=1, fill=0)
 
-        # SHIP TO section (Static for demo)
-        c.drawString(width / 2 + 40, height - 215, self.recipient['name'])
-        c.drawString(width / 2 + 40, height - 230, "3787 Pineview Drive")
-        c.drawString(width / 2 + 40, height - 245, "Cambridge, MA 12210")
+    def draw_item_table(self, c, width, height):
+        # Table header and items
+        table_data = [["Nimike", "Määrä", "Yks.", "A'Hinta EUR", "Alv %", "Verollinen yht. EUR"]]
 
-    def draw_table(self, c, width, height):
-        """Draws the items table in the middle of the invoice."""
-        table_data = [["QTY", "DESCRIPTION", "UNIT PRICE", "AMOUNT"]]
-
-        # Populate table data with items
+        # Adding each item to the table
         for item in self.items:
             qty = item["quantity"]
+            unit = item["unit"]
             desc = item["description"]
             unit_price = item["unit_price"]
             amount = qty * unit_price
-            self.total += amount
-            table_data.append([qty, desc, f"${unit_price:.2f}", f"${amount:.2f}"])
+            tax_amount = amount * self.tax_rate
+            total_amount = amount + tax_amount
+            table_data.append(
+                [desc, qty, unit, f"{unit_price:.2f}", f"{self.tax_rate * 100:.0f}", f"{total_amount:.2f}"])
+            self.total += total_amount
 
-        # Add subtotal and tax rows
-        table_data.append(["", "", "Subtotal", f"${self.total:.2f}"])
-        tax = self.total * self.tax_rate
-        table_data.append(["", "", f"Sales Tax {self.tax_rate * 100:.2f}%", f"${tax:.2f}"])
-        grand_total = self.total + tax
-        table_data.append(["", "", "TOTAL", f"${grand_total:.2f}"])
+        # Total amounts at the end of the table
+        table_data.append(["", "", "", "", "Veroton yhteensä EUR:", f"{self.total / (1 + self.tax_rate):.2f}"])
+        table_data.append(["", "", "", "", "Verollinen yhteensä EUR:", f"{self.total:.2f}"])
 
-        # Create Table
-        table = Table(table_data, colWidths=[1 * inch, 3 * inch, 1.5 * inch, 1.5 * inch])
+        # Create and style the table
+        table = Table(table_data, colWidths=[50 * mm, 20 * mm, 15 * mm, 30 * mm, 20 * mm, 35 * mm])
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONT', (0, 0), (-1, -1), 'Helvetica', 9),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
         ]))
 
-        # Position the table in the PDF
+        # Adjusted vertical position to fit on the page correctly
         table.wrapOn(c, width, height)
-        table.drawOn(c, 40, height - 400)
+        table.drawOn(c, 20 * mm, height - 170 * mm)
 
     def draw_footer(self, c, width):
-        """Draws the footer section including terms, conditions, and total."""
-        # Terms & Conditions
-        c.setFont("Helvetica-Bold", 10)
-        c.drawString(40, 100, "TERMS & CONDITIONS")
-        c.setFont("Helvetica", 10)
-        c.drawString(40, 85, "Payment is due within 15 days")
-        c.drawString(40, 70, "Please make checks payable to: East Repair Inc.")
+        # Draws footer with payment information and total
+        c.setFont("Helvetica", 9)
+        c.drawString(20 * mm, 40, "IBAN: FI12 1234 1234 1234 12")
+        c.drawString(80 * mm, 40, "BIC / SWIFT: OKOYFIHH")
+        c.drawString(140 * mm, 40, "Eräpäivä: 15.1.2016")
 
-        # Total and Signature
-        grand_total = self.total * (1 + self.tax_rate)
-        c.setFont("Helvetica-Bold", 20)
-        c.drawString(40, 140, "TOTAL")
-        c.drawString(250, 140, f"${grand_total:.2f}")
+        c.drawString(20 * mm, 30, "Viitenumero: 100 01235")
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(80 * mm, 30, "Yhteensä EUR:")
+        c.drawString(120 * mm, 30, f"{self.total:.2f}")
 
-        # Signature Placeholder
-        c.setFont("Helvetica", 10)
-        c.drawString(width - 150, 50, self.recipient["name"])
-        c.line(width - 150, 40, width - 50, 40)  # Line for signature
-
+        # Footer contact info
+        c.setFont("Helvetica", 9)
+        c.drawString(20 * mm, 20, "Laskuttava Yritys Oy")
+        c.drawString(20 * mm, 15, "Laskuttajantie 10, 123456 Laskutus")
+        c.drawString(100 * mm, 20, "Y-tunnus: 1234567-8")
+        c.drawString(100 * mm, 15, "Puhelin: 040 111 111")
+        c.drawString(100 * mm, 10, "Sähköposti: sahkoposti@osoite.com")
+        c.drawString(20 * mm, 5, "Laskupohja: www.laskuhari.fi")
