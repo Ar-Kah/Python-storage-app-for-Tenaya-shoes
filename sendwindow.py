@@ -163,11 +163,11 @@ class SendWindow:
         except json.JSONDecodeError:
             print("Error decoding JSON from 'Jsonfiles/varasto.json'. The file may be corrupt or incorrectly formatted.")
 
-        # Generate the invoice using the selected save path
+        # Example data
         items = [
-            {"quantity": 10, "unit": "kg", "description": "Mansikkaa", "unit_price": 10.00},
-            {"quantity": 20, "unit": "l", "description": "Mustikkaa", "unit_price": 5.59},
-            {"quantity": 1, "unit": "kpl", "description": "Toimitusmaksu", "unit_price": 15.00},
+            {"description": "Tenaya Oasi kiipeilykenkä", "quantity": 7, "unit": "kpl", "unit_price": 84.93},
+            {"description": "Tenaya Masai kiipeilykenkä", "quantity": 3, "unit": "kpl", "unit_price": 72.55},
+            # Add more items as needed
         ]
 
         invoice = InvoiceGenerator(items, output_file=self.invoice_save_path)
