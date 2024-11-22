@@ -4,21 +4,50 @@ from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table, TableStyle
 from datetime import datetime, timedelta
+import json
 
 
 TODAY = datetime.today()
 DUEDATE = TODAY + timedelta(days=14)
 TODAY = TODAY.strftime("%d.%m.%Y")
 DUEDATE = DUEDATE.strftime("%d.%m.%Y")
+BANK_NAME = "Nordea"
+BANK_NUMBER = "FI83 1146 3001 1475 83"
+SWIFT_BIC = "NDEAFIHH"
+
 
 class InvoiceGenerator:
-    def __init__(self, items, output_file="exact_invoice.pdf"):
+    def __init__(self, items, customer, output_file="exact_invoice.pdf"):
+        self.billing_info = None
+        self.customer_email = None
+        self.customer = customer
+        # find the billing info of customer
+        self.get_customer_details()
         self.items = items
         self.output_file = output_file
         self.total_excl_vat = 0
         self.vat_total = 0
         self.total_incl_vat = 0
+    def get_customer_details(self):
+        saved = self.customer
+        if self.customer in ['Salmisaari', 'Ristikko', 'Kalasatama']:
+            self.customer = "Kiipeilyvisio Oy"
 
+        try:
+            with open("Jsonfiles/asiakas.json", 'r') as json_file:
+                data = json.load(json_file)
+                for cust, details in data.items():
+                    if cust == self.customer:
+                        if self.customer == "Kiipeilyvisio Oy":
+                            self.customer = self.customer + " " + "(" + saved + ")"
+                        self.billing_info = details["Laskutustiedot"]
+                        self.customer_email = details["Sposti"]
+
+
+        except FileNotFoundError:
+            print("File not found")
+        except json.JSONDecodeError:
+            print("Json syntax fucked")
     def generate(self):
         c = canvas.Canvas(self.output_file, pagesize=A4)
         width, height = A4
@@ -50,12 +79,13 @@ class InvoiceGenerator:
     def draw_invoice_details(self, c, width, height):
         # Buyer info on the left
         c.setFont("Helvetica-Bold", 10)
-        c.drawString(20 * mm, height - 55 * mm, "Ostaja")
+        c.drawString(20 * mm, height - 50 * mm, "Ostaja")
         c.setFont("Helvetica", 10)
-        c.drawString(20 * mm, height - 60 * mm, "Varuste.net, Aalto Group Oy")
-        c.drawString(20 * mm, height - 65 * mm, "PL 100, 17022683")
-        c.drawString(20 * mm, height - 70 * mm, "80020 Kollektor Scan")
-        c.drawString(20 * mm, height - 75 * mm, "17022683@scan.netvisor.fi")
+        c.drawString(20 * mm, height - 55 * mm, self.customer)
+        c.drawString(20 * mm, height - 60 * mm, self.billing_info[0])
+        c.drawString(20 * mm, height - 65 * mm, self.billing_info[1])
+        c.drawString(20 * mm, height - 70 * mm, self.billing_info[2])
+        c.drawString(20 * mm, height - 75 * mm, self.customer_email)
         c.drawString(20 * mm, height - 85 * mm, "Lisätiedot")
         c.drawString(20 * mm, height - 90 * mm, "Kengille myönnämme kuukauden takuun joka kattaa materiaali ja valmistusvirheet")
         c.drawString(20 * mm, height - 100 * mm, "Ostajan viite: 113428, 113429, 113430, 115537, 14418, 117452")
@@ -68,9 +98,9 @@ class InvoiceGenerator:
             ["Viivästyskorko:", "8.0 %"],
             ["Viitenumero:", "10249"],
             ["Maksuehto:", "14 päivää netto"],
-            ["Pankki:", "Nordea"],
-            ["Tilinumero:", "FI83 1146 3001 1475 83"],
-            ["SWIFT/BIC:", "NDEAFIHH"]
+            ["Pankki:", BANK_NAME],
+            ["Tilinumero:", BANK_NUMBER],
+            ["SWIFT/BIC:", SWIFT_BIC]
         ]
 
         # Draw details table
@@ -136,6 +166,6 @@ class InvoiceGenerator:
         c.drawString(90 * mm, 40, "+358 50 410 6994")
         c.drawString(90 * mm, 30, "risto@rk-aviatech.com")
         c.drawString(160 * mm, 60, "Pankkiyhteys")
-        c.drawString(160 * mm, 50, "Nordea")
-        c.drawString(160 * mm, 40, "FI83 1146 3001 1475 83")
-        c.drawString(160 * mm, 30, "NDEAFIHH")
+        c.drawString(160 * mm, 50, BANK_NAME)
+        c.drawString(160 * mm, 40, BANK_NUMBER)
+        c.drawString(160 * mm, 30, SWIFT_BIC)

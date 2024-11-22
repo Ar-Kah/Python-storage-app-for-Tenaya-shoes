@@ -1,0 +1,67 @@
+{
+  "Varuste.net":
+  {
+    "Toinen nimi":"Aalto Group Oy",
+    "Laskutustiedot":
+    [
+      "17022863",
+      "PL 100",
+      "80020 Kollector Scan"
+    ],
+    "Sposti": "17022863@scan.netvisor.fi"
+  },
+  "Kiipeilyvisio Oy":
+  {
+    "Tarkennus":
+    [
+      "Salmisaari",
+      "Ristikko",
+      "Kalasatama"
+    ],
+    "Laskutustiedot":
+     [
+       "Ostolaskut 17931L",
+       "PL 10",
+       "57090 VISMA SCAN"
+     ],
+     "Sposti": "17931L@scan.netvisor.fi"
+  },
+  "Oulun Kiipeilykeskus Oy":
+  {
+    "Osoitetiedot":
+    [
+      "Paakakatu 7 (Sale Toppila)",
+      "90520 Oulu",
+      "info@oulunkiipeilykeskus.com",
+      "+358 45 180 1403"
+    ],
+    "Laskutustiedot":
+    [
+      "Ostolaskut 10833D",
+      "PL 10",
+      "57090 VISMA SCAN",
+      "10833D@scan.netvisor.fi"
+    ]
+  },
+  "Bolderpaja":
+  {
+    "Osoitetiedot":
+    [
+      "Seminaarinkaru 15",
+      "40100 Jyväskylä",
+      "boulderpaja@gmail.com",
+      "+358 44 0581 555"
+    ]
+  },
+  "Tampereen Kiipelykeskus Oy":
+  {
+    "Osoitetiedot":
+    [
+      "Mäntyhaantie 2",
+      "33800 Tampere",
+      "info@tampereenkiipelykeskus.fi",
+      "+358 10 420 4422"
+    ]
+  },
+  "Laskutustiedot": "fennoa.506191"
+}

@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, ttk
 import json
 from invoice_generator import InvoiceGenerator
 
@@ -25,7 +25,7 @@ class SendWindow:
     def __init__(self, parent, refresh_callback):
         self.send_window = tk.Toplevel(parent)
         self.send_window.title("Send Items")
-        self.send_window.geometry("400x400")
+        self.send_window.geometry("400x500")
 
         # Store the callback function
         self.refresh_callback = refresh_callback
@@ -58,7 +58,22 @@ class SendWindow:
         self.create_entry()
         self.create_listbox()
         self.create_buttons()
+        self.create_combobox()
         self.create_save_location_entry()
+
+    def create_combobox(self):
+        values = [
+            "Varuste.net",
+            "Salmisaari",
+            "Ristikko",
+            "Kalasatama",
+            "Oulun Kiipelykeskus",
+            "Bolderpaja",
+            "Tampereen kiipelyksekus"
+        ]
+        self.combobox = ttk.Combobox(self.send_window, values=values)
+        self.combobox.set("Valitse asiakas")
+        self.combobox.pack(pady=10)
 
     def create_label(self):
         label = tk.Label(self.send_window, text="Start adding shoes by scanning barcodes")
@@ -169,8 +184,8 @@ class SendWindow:
             {"description": "Tenaya Masai kiipeilykenkä", "quantity": 3, "unit": "kpl", "unit_price": 72.55},
             # Add more items as needed
         ]
-
-        invoice = InvoiceGenerator(items, output_file=self.invoice_save_path)
+        customer = self.combobox.get()
+        invoice = InvoiceGenerator(items, customer, output_file=self.invoice_save_path)
         invoice.generate()
         print(f"Invoice saved to {self.invoice_save_path}")
         self.send_window.destroy()

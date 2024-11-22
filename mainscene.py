@@ -4,6 +4,7 @@ import pandas as pd
 import json
 from addscene import AddWindow
 from sendwindow import SendWindow
+import invoice_generator
 
 """
 Author: Aaro Karhu, aaro.karhu19@gmail.com
@@ -132,7 +133,6 @@ def main():
     root.title("Tenaya Storage Management")
     app = PandasApp(root)
     root.mainloop()
-
 
 if __name__ == "__main__":
     main()
