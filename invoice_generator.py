@@ -29,23 +29,30 @@ class InvoiceGenerator:
         self.vat_total = 0
         self.total_incl_vat = 0
     def get_customer_details(self):
+
         saved = self.customer
+
         if self.customer in ['Salmisaari', 'Ristikko', 'Kalasatama']:
             self.customer = "Kiipeilyvisio Oy"
 
         try:
             with open("Jsonfiles/asiakas.json", 'r') as json_file:
                 data = json.load(json_file)
+
                 for cust, details in data.items():
+
                     if cust == self.customer:
+                        # add some information if customer is selected ass Kiipeilyvisio Oy
                         if self.customer == "Kiipeilyvisio Oy":
                             self.customer = self.customer + " " + "(" + saved + ")"
+
                         self.billing_info = details["Laskutustiedot"]
                         self.customer_email = details["Sposti"]
 
-
+                json_file.close()
         except FileNotFoundError:
             print("File not found")
+
         except json.JSONDecodeError:
             print("Json syntax fucked")
     def generate(self):
@@ -79,16 +86,17 @@ class InvoiceGenerator:
     def draw_invoice_details(self, c, width, height):
         # Buyer info on the left
         c.setFont("Helvetica-Bold", 10)
-        c.drawString(20 * mm, height - 50 * mm, "Ostaja")
+        c.drawString(20 * mm, height - 45 * mm, "Ostaja")
         c.setFont("Helvetica", 10)
-        c.drawString(20 * mm, height - 55 * mm, self.customer)
-        c.drawString(20 * mm, height - 60 * mm, self.billing_info[0])
-        c.drawString(20 * mm, height - 65 * mm, self.billing_info[1])
-        c.drawString(20 * mm, height - 70 * mm, self.billing_info[2])
-        c.drawString(20 * mm, height - 75 * mm, self.customer_email)
-        c.drawString(20 * mm, height - 85 * mm, "Lisätiedot")
+        c.drawString(20 * mm, height - 50 * mm, self.customer)
+        c.drawString(20 * mm, height - 55 * mm, self.billing_info[0])
+        c.drawString(20 * mm, height - 60 * mm, self.billing_info[1])
+        c.drawString(20 * mm, height - 65 * mm, self.billing_info[2])
+        c.drawString(20 * mm, height - 70 * mm, self.customer_email)
+
+
+        c.drawString(20 * mm, height - 85 * mm, "Lisätiedot:")
         c.drawString(20 * mm, height - 90 * mm, "Kengille myönnämme kuukauden takuun joka kattaa materiaali ja valmistusvirheet")
-        c.drawString(20 * mm, height - 100 * mm, "Ostajan viite: 113428, 113429, 113430, 115537, 14418, 117452")
 
         # Invoice metadata on the right
         details = [
@@ -116,7 +124,7 @@ class InvoiceGenerator:
 
     def draw_item_table(self, c, width, height):
         # Item table headers
-        headers = ["Tuotekuvaus", "Määrä", "Yksikkö", "à hinta", "Alv %", "Yhteensä"]
+        headers = ["Tuotekuvaus", "Määrä", "Yksikkö", "hinta", "Alv %", "Alv €", "Yhteensä"]
         table_data = [headers]
 
         # Add items
@@ -124,33 +132,38 @@ class InvoiceGenerator:
             desc = item["description"]
             qty = item["quantity"]
             unit = item["unit"]
-            unit_price = item["unit_price"]
+            unit_price = item["price"]
             excl_vat = qty * unit_price
             vat = excl_vat * 0.255  # 25.5% tax rate
             incl_vat = excl_vat + vat
 
-            table_data.append([desc, qty, unit, f"{unit_price:.2f}", "25.5%", f"{incl_vat:.2f}"])
+            table_data.append([desc, qty, unit, f"{unit_price:.2f} €", "25.5%", f"{vat:.2f} €", f"{incl_vat:.2f} €"])
             self.total_excl_vat += excl_vat
             self.vat_total += vat
 
-        # Add totals
-        table_data.append(["", "", "", "", "Veroton yht:", f"{self.total_excl_vat:.2f}"])
-        table_data.append(["", "", "", "", "ALV 25.5%:", f"{self.vat_total:.2f}"])
-        table_data.append(["", "", "", "", "Yhteensä:", f"{self.total_excl_vat + self.vat_total:.2f}"])
-
         # Create and style the table
-        table = Table(table_data, colWidths=[50 * mm, 20 * mm, 20 * mm, 30 * mm, 20 * mm, 30 * mm])
+        table = Table(table_data, colWidths=[50 * mm, 10 * mm, 20 * mm, 20 * mm, 20 * mm,20 * mm , 30 * mm])
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONT', (0, 0), (-1, -1), 'Helvetica', 9),
+            ('FONT', (0, 0), (-1, -1), 'Helvetica', 8),
             ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
         ]))
 
         # Draw table
         table.wrapOn(c, width, height)
         table.drawOn(c, 20 * mm, height - 140 * mm)
+
+        c.setFont("Helvetica-Bold", 10)
+        c.drawString(130 * mm, 140, "Veroton hinta yht")
+        c.drawString(130 * mm, 128, "Arvolisävero yht")
+        c.setFont("Helvetica", 10)
+        c.drawString(170 * mm, 140, f"{self.total_excl_vat:.2f} €")
+        c.drawString(170 * mm, 128, f"{self.vat_total:.2f} €")
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(130 * mm, 100, "Yhteensä")
+        c.drawString(170 * mm, 100, f"{self.total_excl_vat + self.vat_total:.2f} €")
 
     def draw_footer(self, c, width, height):
         # Footer details

@@ -1,41 +1,61 @@
 {
   "Ra": {
-    "hinta": 73.78,
-    "tuotekuvaus": "Tenaya Ra kiipeilykenkä"
+    "description": "Tenaya Ra kiipeilykenkä",
+    "quantity": 1,
+    "unit": "kpl",
+    "price": 73.78
   },
   "Masai": {
-    "hinta": 73.78,
-    "tuotekuvaus": "Tenaya Masai kiipeilykenkä"
+    "description": "Tenaya Masai kiipeilykenkä",
+    "quantity": 1,
+    "unit": "kpl",
+    "price": 73.78
   },
   "Tarifa": {
-    "hinta": 84.93,
-    "tuotekuvaus": "Tenaya Tarifa kiipeilykenkä"
+    "description": "Tenaya Tarifa kiipeilykenkä",
+    "quantity": 1,
+    "unit": "kpl",
+    "price": 84.93
   },
   "Inti": {
-    "tuotekuvaus": "Tenaya Inti kiipeilykenkä"
+    "description": "Tenaya Inti kiipeilykenkä",
+    "quantity": 1,
+    "unit": "kpl"
   },
   "Iati": {
-    "hinta": 87.58,
-    "tuotekuvaus": "Tenaya Iati kiipeilykenkä"
+    "description": "Tenaya Iati kiipeilykenkä",
+    "quantity": 1,
+    "unit": "kpl",
+    "price": 87.58
   },
   "Oasi": {
-    "hinta": 84.93,
-    "tuotekuvaus": "Tenaya Oasi kiipeilykenkä"
+    "description": "Tenaya Oasi kiipeilykenkä",
+    "quantity": 1,
+    "unit": "kpl",
+    "price": 84.93
   },
   "Tanta": {
-    "hinta": 54.83,
-    "tuotekuvaus": "Tenaya Tanta kiipeilykenkä"
+    "description": "Tenaya Tanta kiipeilykenkä",
+    "quantity": 1,
+    "unit": "kpl",
+    "price": 54.83
   },
   "Mundaka": {
-    "hinta": 90.30,
-    "tuotekuvaus": "Tenaya Munkaka kiipeilykenkä"
+    "description": "Tenaya Munkaka kiipeilykenkä",
+    "quantity": 1,
+    "unit": "kpl",
+    "price": 90.30
   },
   "Oasi LV": {
-    "hinta": 84.93,
-    "tuotekuvaus": "Tenaya Oasi LV kiipeilykenkä"
+    "description": "Tenaya Oasi LV kiipeilykenkä",
+    "quantity": 1,
+    "unit": "kpl",
+    "price": 84.93
   },
   "Mastia": {
-    "hinta": 93.05,
-    "tuotekuvaus": "Tenaya Mastia kiipeilykenkä"
+    "description": "Tenaya Mastia kiipeilykenkä",
+    "quantity": 1,
+    "unit": "kpl",
+    "price": 93.05
   }
 }

@@ -158,7 +158,9 @@ class SendWindow:
 
             for item in self.items:
                 shoe_name, size = item.split(" - ")
+
                 for shoe_entry in data:
+
                     if shoe_entry["name"] == shoe_name:
                         if size in shoe_entry:
                             shoe_entry[size] -= 1
@@ -166,9 +168,8 @@ class SendWindow:
                             print(f"Updated {shoe_name} size {size} to {shoe_entry[size]}")
                         else:
                             print(f"Size '{size}' not found for shoe '{shoe_name}' in data.")
-                        break
-                    else:
-                        print(f"Shoe '{shoe_name}' not found in data.")
+
+                file.close()
 
             with open("Jsonfiles/varasto.json", 'w') as file:
                 json.dump(data, file, indent=4)
@@ -176,16 +177,55 @@ class SendWindow:
         except FileNotFoundError:
             print("The file 'Jsonfiles/varasto.json' was not found.")
         except json.JSONDecodeError:
-            print("Error decoding JSON from 'Jsonfiles/varasto.json'. The file may be corrupt or incorrectly formatted.")
+            print(
+                "Error decoding JSON from 'Jsonfiles/varasto.json'. The file may be corrupt or incorrectly formatted.")
 
         # Example data
         items = [
-            {"description": "Tenaya Oasi kiipeilykenkä", "quantity": 7, "unit": "kpl", "unit_price": 84.93},
-            {"description": "Tenaya Masai kiipeilykenkä", "quantity": 3, "unit": "kpl", "unit_price": 72.55},
+            {"tuotekuvaus": "Tenaya Oasi kiipeilykenkä", "määrä": 7, "yksikko": "kpl", "hinta": 84.93},
+            {"tuotekuvaus": "Tenaya Masai kiipeilykenkä", "määrä": 3, "yksikko": "kpl", "hinta": 72.55},
             # Add more items as needed
         ]
+        self.reformat_data()
         customer = self.combobox.get()
-        invoice = InvoiceGenerator(items, customer, output_file=self.invoice_save_path)
+        invoice = InvoiceGenerator(self.reformat, customer, output_file=self.invoice_save_path)
         invoice.generate()
         print(f"Invoice saved to {self.invoice_save_path}")
         self.send_window.destroy()
+
+    def reformat_data(self):
+        '''
+        Reformat the items from the self.items list to a different data format before
+        generating an invoice.
+        :return:
+        '''
+        self.reformat = []
+        try:
+            with open("Jsonfiles/kenka_tiedot.json", 'r') as file:
+                data = json.load(file)
+
+            # Process each item in self.items
+            for item in self.items:
+                shoe_name, size = item.split(" - ")
+
+                # Check if the shoe exists in the JSON data
+                if shoe_name in data:
+                    details_of_shoe = data[shoe_name]
+
+                    # Check if the shoe is already in self.reformat
+                    for added in self.reformat:
+                        if added.get('description') == details_of_shoe.get('description'):
+                            # Increment the 'quantity' field if a duplicate is found
+                            added['quantity'] = added.get('quantity', 0) + 1
+                            break
+                    else:
+                        # Add the shoe to the reformat list if it's not already there
+                        self.reformat.append(details_of_shoe.copy())
+
+
+            print(str(self.reformat))
+
+        except FileNotFoundError:
+            print("Could not find file")
+        except json.JSONDecodeError:
+            print("JSON syntax error")
