@@ -57,9 +57,17 @@ class SendWindow:
         self.create_label()
         self.create_entry()
         self.create_listbox()
-        self.create_buttons()
-        self.create_combobox()
+        # Button to trigger file save location selection
+        select_save_location_button = tk.Button(self.send_window, text="Select Save Location",
+                                                command=self.select_save_location)
+        select_save_location_button.pack(pady=5)
+
         self.create_save_location_entry()
+        self.create_combobox()
+
+        # Button to finalize and create the invoice
+        close_button = tk.Button(self.send_window, text="Make Invoice", command=self.save_and_close)
+        close_button.pack(pady=10)
 
     def create_combobox(self):
         values = [
@@ -87,18 +95,50 @@ class SendWindow:
     def create_listbox(self):
         self.items = []
         self.list_items = tk.Variable(value=self.items)
-        self.listbox = tk.Listbox(self.send_window, listvariable=self.list_items)
-        self.listbox.pack(pady=10)
 
-    def create_buttons(self):
-        # Button to trigger file save location selection
-        select_save_location_button = tk.Button(self.send_window, text="Select Save Location",
-                                                command=self.select_save_location)
-        select_save_location_button.pack(pady=5)
+        # Frame to hold Listbox and Scrollbar
+        listbox_frame = tk.Frame(self.send_window)
+        listbox_frame.pack(pady=10)
 
-        # Button to finalize and create the invoice
-        close_button = tk.Button(self.send_window, text="Make Invoice", command=self.save_and_close)
-        close_button.pack(pady=10)
+        # Create the Listbox
+        self.listbox = tk.Listbox(listbox_frame, listvariable=self.list_items,
+                                  selectbackground="darkgray", selectmode=tk.SINGLE)
+
+        self.create_context_menu()
+
+        self.listbox.bind("<Button-3>", self.show_context_menu)
+
+        self.listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        # Add a vertical Scrollbar
+        scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL, command=self.listbox.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Link the Listbox and Scrollbar
+        self.listbox.config(yscrollcommand=scrollbar.set)
+
+    def show_context_menu(self, event):
+        # Get the index of the clicked item in the listbox
+        try:
+            self.context_menu.post(event.x_root, event.y_root)  # Show the menu at the mouse position
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def create_context_menu(self):
+        # Create a context menu (dropdown menu)
+        self.context_menu = tk.Menu(self.listbox, tearoff=0)
+        self.context_menu.add_command(label="Delete", command=self.delete_selected_item)
+
+    def delete_selected_item(self):
+
+        try:
+            selected_index = self.listbox.selection_get()
+
+            self.items.remove(selected_index)
+            self.list_items.set(self.items)
+
+        except Exception as e:
+            print(f"Error {e}")
 
     def create_save_location_entry(self):
         save_location_label = tk.Label(self.send_window, text="Invoice Save Location:")
@@ -134,6 +174,8 @@ class SendWindow:
             # Save the chosen path back to 'path.txt' for next time
             with open("Text files/path.txt", 'w') as path_file:
                 path_file.write(file_path)
+
+        self.send_window.focus_force()
 
     def read_entry(self, event):
         barcode = self.entry.get()

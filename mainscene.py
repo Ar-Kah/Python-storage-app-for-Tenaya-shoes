@@ -56,7 +56,7 @@ class PandasApp:
         df = pd.DataFrame(data)
 
         # Create the table inside the inner frame
-        self.table = Table(self.inner_frame, dataframe=df, showstatusbar=True, showtoolbar=False)
+        self.table = Table(self.inner_frame, dataframe=df, showstatusbar=True, showtoolbar=True)
         self.table.contractColumns(30)
         self.table.rowheight = 30
         self.table.show()
@@ -129,7 +129,7 @@ def read_json():
 def main():
     """Sets up the main application window and runs the app."""
     root = tk.Tk()
-    root.geometry("1000x500")
+    root.geometry("1600x650")
     root.title("Tenaya Storage Management")
     app = PandasApp(root)
     root.mainloop()
