@@ -19,9 +19,6 @@ class PandasApp:
     The main window where the storage is displayed with pandastable
     The table is updated when shoes are added to the varasto.json file
     in the add window
-
-    TODO: make a send button and a similar window for that also
-    TODO: make an automatic invoice maker in the send window
     """
 
     def __init__(self, master) -> None:
