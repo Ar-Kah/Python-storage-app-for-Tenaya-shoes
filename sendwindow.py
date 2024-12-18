@@ -242,9 +242,15 @@ class SendWindow:
         self.count_items.set(formatted_counts)
 
     def save_and_close(self):
+
+        customer = self.combobox.get()
+        if customer == "Select customer":
+            self.label.config(text="Please select a customer", fg="red", font="15")
+            return
+
         if not self.invoice_save_path:
             # Show a message if no save location is selected
-            print("Please select a save location for the invoice.")
+            self.label.config(text="Please select a save location for the invoice.", fg="red", font="15")
             return
 
         try:
@@ -277,10 +283,6 @@ class SendWindow:
 
 
         self.reformat_data()
-        customer = self.combobox.get()
-        if customer == "Select customer":
-            self.label.config(text="Please select a customer", fg="red", font="15")
-            return
 
         invoice = InvoiceGenerator(self.reformat, customer, output_file=self.invoice_save_path)
         invoice.generate()
