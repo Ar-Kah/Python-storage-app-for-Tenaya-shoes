@@ -275,12 +275,7 @@ class SendWindow:
             print(
                 "Error decoding JSON from 'Jsonfiles/varasto.json'. The file may be corrupt or incorrectly formatted.")
 
-        # Example data
-        items = [
-            {"tuotekuvaus": "Tenaya Oasi kiipeilykenkä", "määrä": 7, "yksikko": "kpl", "hinta": 84.93},
-            {"tuotekuvaus": "Tenaya Masai kiipeilykenkä", "määrä": 3, "yksikko": "kpl", "hinta": 72.55},
-            # Add more items as needed
-        ]
+
         self.reformat_data()
         customer = self.combobox.get()
         if customer == "Select customer":
