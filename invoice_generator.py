@@ -6,7 +6,6 @@ from reportlab.platypus import Table, TableStyle
 from datetime import datetime, timedelta
 import json
 
-
 TODAY = datetime.today()
 DUEDATE = TODAY + timedelta(days=14)
 TODAY = TODAY.strftime("%d.%m.%Y")
@@ -16,8 +15,51 @@ BANK_NUMBER = "FI83 1146 3001 1475 83"
 SWIFT_BIC = "NDEAFIHH"
 
 
+def get_invoice_number():
+    with open("Text files/invoice_number.txt", "r") as file:
+        return file.readline()
+
+
+def draw_header(c, width, height):
+    # Company details on the left
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(20 * mm, height - 20 * mm, "RK-AviaTech Oy")
+    c.setFont("Helvetica", 10)
+    c.drawString(20 * mm, height - 25 * mm, "Tahkokatu 1")
+    c.drawString(20 * mm, height - 30 * mm, "37120 Nokia")
+    c.drawString(20 * mm, height - 35 * mm, "www.rk-aviatech.com")
+
+    # TODO: Logo on the right
+    # logo_path = "logo.png"  # Replace with your logo file path
+    # c.drawImage(logo_path, width - 50 * mm, height - 30 * mm, 30 * mm, 15 * mm)
+
+    # Invoice title
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(width / 2 - 10 * mm, height - 20 * mm, "LASKU")
+
+
+def draw_footer(c, width, height):
+    # Footer details
+    c.setFont("Helvetica", 9)
+    c.drawString(20 * mm, 85, "Pyydämme käyttämään maksaessanne viitenumeroa: 10249")
+    c.line(20 * mm, 75, 200 * mm, 75)
+    c.drawString(20 * mm, 60, "RK-AviaTeck Oy")
+    c.drawString(20 * mm, 50, "Tahkokatu 1")
+    c.drawString(20 * mm, 40, "37120 Nokia")
+    c.drawString(20 * mm, 30, "Y-tunnus 2602150-4")
+    c.drawString(90 * mm, 60, "Yhteystiedot")
+    c.drawString(90 * mm, 50, "Risto Kallinen")
+    c.drawString(90 * mm, 40, "+358 50 410 6994")
+    c.drawString(90 * mm, 30, "risto@rk-aviatech.com")
+    c.drawString(160 * mm, 60, "Pankkiyhteys")
+    c.drawString(160 * mm, 50, BANK_NAME)
+    c.drawString(160 * mm, 40, BANK_NUMBER)
+    c.drawString(160 * mm, 30, SWIFT_BIC)
+
+
 class InvoiceGenerator:
     def __init__(self, items, customer, output_file="exact_invoice.pdf"):
+        self.invoice_number = get_invoice_number()  # get the invoice number
         self.billing_info = None
         self.customer_email = None
         self.customer = customer
@@ -28,6 +70,12 @@ class InvoiceGenerator:
         self.total_excl_vat = 0
         self.vat_total = 0
         self.total_incl_vat = 0
+
+    def update_invoice_number(self):
+        self.invoice_number = int(self.invoice_number) + 1
+        with open("Text files/invoice_number.txt", "w") as file:
+            file.write(str(self.invoice_number))
+
     def get_customer_details(self):
 
         saved = self.customer
@@ -55,33 +103,20 @@ class InvoiceGenerator:
 
         except json.JSONDecodeError:
             print("Json syntax fucked")
+
     def generate(self):
         c = canvas.Canvas(self.output_file, pagesize=A4)
         width, height = A4
 
-        self.draw_header(c, width, height)
+        draw_header(c, width, height)
         self.draw_invoice_details(c, width, height)
         self.draw_item_table(c, width, height)
-        self.draw_footer(c, width, height)
+        draw_footer(c, width, height)
+
+        #lastly update the invoice number
+        self.update_invoice_number()
 
         c.save()
-
-    def draw_header(self, c, width, height):
-        # Company details on the left
-        c.setFont("Helvetica-Bold", 12)
-        c.drawString(20 * mm, height - 20 * mm, "RK-AviaTech Oy")
-        c.setFont("Helvetica", 10)
-        c.drawString(20 * mm, height - 25 * mm, "Tahkokatu 1")
-        c.drawString(20 * mm, height - 30 * mm, "37120 Nokia")
-        c.drawString(20 * mm, height - 35 * mm, "www.rk-aviatech.com")
-
-        # Logo on the right
-        #logo_path = "logo.png"  # Replace with your logo file path
-        #c.drawImage(logo_path, width - 50 * mm, height - 30 * mm, 30 * mm, 15 * mm)
-
-        # Invoice title
-        c.setFont("Helvetica-Bold", 16)
-        c.drawString(width / 2 - 10 * mm, height - 20 * mm, "LASKU")
 
     def draw_invoice_details(self, c, width, height):
         # Buyer info on the left
@@ -94,14 +129,14 @@ class InvoiceGenerator:
         c.drawString(20 * mm, height - 65 * mm, self.billing_info[2])
         c.drawString(20 * mm, height - 70 * mm, self.customer_email)
 
-
         c.drawString(20 * mm, height - 85 * mm, "Lisätiedot:")
-        c.drawString(20 * mm, height - 90 * mm, "Kengille myönnämme kuukauden takuun joka kattaa materiaali ja valmistusvirheet")
+        c.drawString(20 * mm, height - 90 * mm,
+                     "Kengille myönnämme kuukauden takuun joka kattaa materiaali ja valmistusvirheet")
 
         # Invoice metadata on the right
         details = [
             ["Päiväys:", TODAY],
-            ["Laskun numero:", "1024"],
+            ["Laskun numero:", self.invoice_number],
             ["Eräpäivä:", DUEDATE],
             ["Viivästyskorko:", "8.0 %"],
             ["Viitenumero:", "10249"],
@@ -142,7 +177,7 @@ class InvoiceGenerator:
             self.vat_total += vat
 
         # Create and style the table
-        table = Table(table_data, colWidths=[50 * mm, 10 * mm, 20 * mm, 20 * mm, 20 * mm,20 * mm , 30 * mm])
+        table = Table(table_data, colWidths=[50 * mm, 10 * mm, 20 * mm, 20 * mm, 20 * mm, 20 * mm, 30 * mm])
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
@@ -164,21 +199,3 @@ class InvoiceGenerator:
         c.setFont("Helvetica-Bold", 12)
         c.drawString(130 * mm, 100, "Yhteensä")
         c.drawString(170 * mm, 100, f"{self.total_excl_vat + self.vat_total:.2f} €")
-
-    def draw_footer(self, c, width, height):
-        # Footer details
-        c.setFont("Helvetica", 9)
-        c.drawString(20 * mm, 85, "Pyydämme käyttämään maksaessanne viitenumeroa: 10249")
-        c.line(20 * mm, 75, 200 * mm, 75)
-        c.drawString(20 * mm, 60, "RK-AviaTeck Oy")
-        c.drawString(20 * mm, 50, "Tahkokatu 1")
-        c.drawString(20 * mm, 40, "37120 Nokia")
-        c.drawString(20 * mm, 30, "Y-tunnus 2602150-4")
-        c.drawString(90 * mm, 60, "Yhteystiedot")
-        c.drawString(90 * mm, 50, "Risto Kallinen")
-        c.drawString(90 * mm, 40, "+358 50 410 6994")
-        c.drawString(90 * mm, 30, "risto@rk-aviatech.com")
-        c.drawString(160 * mm, 60, "Pankkiyhteys")
-        c.drawString(160 * mm, 50, BANK_NAME)
-        c.drawString(160 * mm, 40, BANK_NUMBER)
-        c.drawString(160 * mm, 30, SWIFT_BIC)

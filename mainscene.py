@@ -130,6 +130,7 @@ def main():
     """Sets up the main application window and runs the app."""
     root = tk.Tk()
     root.geometry("1600x650")
+    root.wm_minsize(1600, 650)
     root.title("Tenaya Storage Management")
     app = PandasApp(root)
     root.mainloop()
