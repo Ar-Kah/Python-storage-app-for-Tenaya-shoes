@@ -9,18 +9,56 @@ The project was made to help with storage management for bigger and bigger quant
 If you try to run the code you must add an _asiakas.json_ (asiakas = customer in finnish) file to the _json_ folder this is to protect our customers details.
 ___You sould use this format to add customer details___
 
-'code()
-  "Varuste.net":
+Markup :  `
+{
+  "Kiipelykeskus 1":            // the first element is the name of the cstomer
   {
-    "Toinen nimi":"Aalto Group Oy",
-    "Laskutustiedot":
+    "Toinen nimi":"KiKe",      // this is an optional element in the json file but it indicates the second name of the company if it has one
+    "Laskutustiedot":          // this is the billing information of the customer
     [
-      "17022863",
+      "2319432",
       "PL 100",
       "80020 Kollector Scan"
     ],
-    "Sposti": "17022863@scan.netvisor.fi"
-  }'
+    "Sposti": "932132@email.com"    // email
+  },
+  "Kiipeilyvisio Oy":
+  {
+    "Tarkennus":              // this is also a optional array element
+    [
+      "Name1",
+      "Name2",
+      "Name3"
+    ],
+    "Laskutustiedot":
+     [
+       "Ostolaskut 32143G",
+       "PL 50",
+       "43218 EXAMLE SCAN"
+     ],
+     "Sposti": "179354L@scan.joujou.fi"
+  },
+  "Some name":
+  {
+    "Osoitetiedot":        // this is also an optional element in the json file
+    [
+      "Peräkatu 72",
+      "90213 Kuusamo",
+      "info@somename.com",
+      "0403213432"
+    ],
+    "Laskutustiedot":
+    [
+      "Ostolaskut 10663C",
+      "PL 20",
+      "53421 VISMA SCAN",
+      "113213D@scan.scanscan.fi"
+    ]
+  }
+}
+`
+Markup : ```json
+         ```
 
 #### Adding window ####
 
