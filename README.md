@@ -1,8 +1,8 @@
 # Python storage app for Tenaya Finland #
 
-## This project was made for my familys company to manage our shoe storage. It handles comming and leaving shipments. ##
+## This project was made for my family's company to manage our shoe storage. It handles incomming and leaving shipments. ##
 
-The project was made to help with storage management for bigger and bigger quantitys. I plan to update this project every time using it we find a bug or think that furteher functionality is needed. Right now the app can stores the shoes in a json file and displays it in a pandastable.
+The project was made to help with storage management for bigger and bigger quantities. I plan to update this project every time using it we find a bug or think that furteher functionality is needed. Right now the app can store the shoes in a json file and displays it in a pandastable, add shoes, and send (delete) shoes and generate a PDF invoice of the sent shoes.
 
 ## Main window ##
 
@@ -10,7 +10,7 @@ the program generates a pandastable from the json file called storage.json and d
 
 ## Adding window ##
 
-In the adding window the application handles comming shipments by scanning the barcode of the shoebox. You can test the program by taking the barecodes from the ___barcodes json file___. Before adding the shoes to the storage you can easily check how many shoes of each model and size have been added and the check if it maches with the shipping documents. After saving the shoes they are added to the main storage and written to the storage.json file.
+In the adding window the application handles incomming shipments by scanning the barcode of the shoebox. You can test the program by taking the barecodes from the ___barcodes json file___. Before adding the shoes to the storage you can easily check how many shoes of each model and size have been added and the check if it matches with the shipping documents. After saving the shoes they are added to the main storage and written to the storage.json file.
 
 ## sending window ##
 
@@ -19,7 +19,7 @@ in this window you can also scan barcodes to an entry and the program will tell 
 #### Before running ####
 
 If you try to run the code you must add an _asiakas.json_ (asiakas = customer in finnish) file to the _json_ folder this is to protect our customers details.
-___You sould use this format to add customer details___
+___You should use this format to add customer details___
 
 ```json
 {
@@ -69,5 +69,5 @@ ___You sould use this format to add customer details___
   }
 }
 ```
-You sould notice that for example elements named ___Tarkennus___ (adjustments) and ___Osoitetiedot___ are optional and are not mandatory so that the program runs.
+You should notice that for example elements named ___Tarkennus___ (adjustments) and ___Osoitetiedot___ are optional and are not mandatory so that the program runs.
 
