@@ -11,20 +11,20 @@ ___You sould use this format to add customer details___
 
 ```json
 {
-  "Kiipelykeskus 1":            // the first element is the name of the cstomer
+  "Kiipelykeskus 1":
   {
-    "Toinen nimi":"KiKe",      // this is an optional element in the json file but it indicates the second name of the company if it has one
-    "Laskutustiedot":          // this is the billing information of the customer
+    "Toinen nimi":"KiKe",
+    "Laskutustiedot":
     [
       "2319432",
       "PL 100",
       "80020 Kollector Scan"
     ],
-    "Sposti": "932132@email.com"    // email
+    "Sposti": "932132@email.com"
   },
   "Kiipeilyvisio Oy":
   {
-    "Tarkennus":              // this is also a optional array element
+    "Tarkennus":
     [
       "Name1",
       "Name2",
@@ -40,7 +40,7 @@ ___You sould use this format to add customer details___
   },
   "Some name":
   {
-    "Osoitetiedot":        // this is also an optional element in the json file
+    "Osoitetiedot":
     [
       "Peräkatu 72",
       "90213 Kuusamo",
@@ -57,6 +57,7 @@ ___You sould use this format to add customer details___
   }
 }
 ```
+You sould notice that for example elements named _Tarkennus_ (adjustments) and _Osoitetiedot_ are optional and are not mandatory so that the program runs.
 
 #### Adding window ####
 
