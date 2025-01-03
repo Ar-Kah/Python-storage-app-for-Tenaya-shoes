@@ -16,7 +16,7 @@ In the adding window the application handles incomming shipments by scanning the
 
 in this window you can also scan barcodes to an entry and the program will tell you how many of each kind you have scanned. By adding the ___asiakas.json___ file to the json file you can generate an invoice and select where the program will save your generated PDF invoice.
 
-#### Before running ####
+### Before running ###
 
 If you try to run the code you must add an _asiakas.json_ (asiakas = customer in finnish) file to the _json_ folder this is to protect our customers details.
 ___You should use this format to add customer details___
