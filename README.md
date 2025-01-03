@@ -34,7 +34,7 @@ ___You should use this format to add customer details___
     ],
     "Sposti": "932132@email.com"
   },
-  "Kiipeilyvisio Oy":
+  "Kiipeily Oy":
   {
     "Tarkennus":
     [
