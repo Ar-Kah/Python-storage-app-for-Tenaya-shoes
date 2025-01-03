@@ -9,7 +9,7 @@ The project was made to help with storage management for bigger and bigger quant
 If you try to run the code you must add an _asiakas.json_ (asiakas = customer in finnish) file to the _json_ folder this is to protect our customers details.
 ___You sould use this format to add customer details___
 
-code()
+'code()
   "Varuste.net":
   {
     "Toinen nimi":"Aalto Group Oy",
@@ -20,7 +20,7 @@ code()
       "80020 Kollector Scan"
     ],
     "Sposti": "17022863@scan.netvisor.fi"
-  }
+  }'
 
 #### Adding window ####
 
