@@ -9,7 +9,7 @@ The project was made to help with storage management for bigger and bigger quant
 If you try to run the code you must add an _asiakas.json_ (asiakas = customer in finnish) file to the _json_ folder this is to protect our customers details.
 ___You sould use this format to add customer details___
 
-Markup :  `
+```json
 {
   "Kiipelykeskus 1":            // the first element is the name of the cstomer
   {
@@ -56,9 +56,7 @@ Markup :  `
     ]
   }
 }
-`
-Markup : ```json
-         ```
+```
 
 #### Adding window ####
 
