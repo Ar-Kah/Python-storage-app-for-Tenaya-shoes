@@ -4,6 +4,18 @@
 
 The project was made to help with storage management for bigger and bigger quantitys. I plan to update this project every time using it we find a bug or think that furteher functionality is needed. Right now the app can stores the shoes in a json file and displays it in a pandastable.
 
+## Main window ##
+
+the program generates a pandastable from the json file called storage.json and displays this information.
+
+## Adding window ##
+
+In the adding window the application handles comming shipments by scanning the barcode of the shoebox. You can test the program by taking the barecodes from the ___barcodes json file___. Before adding the shoes to the storage you can easily check how many shoes of each model and size have been added and the check if it maches with the shipping documents. After saving the shoes they are added to the main storage and written to the storage.json file.
+
+## sending window ##
+
+in this window you can also scan barcodes to an entry and the program will tell you how many of each kind you have scanned. By adding the ___asiakas.json___ file to the json file you can generate an invoice and select where the program will save your generated PDF invoice.
+
 #### Before running ####
 
 If you try to run the code you must add an _asiakas.json_ (asiakas = customer in finnish) file to the _json_ folder this is to protect our customers details.
@@ -59,14 +71,3 @@ ___You sould use this format to add customer details___
 ```
 You sould notice that for example elements named ___Tarkennus___ (adjustments) and ___Osoitetiedot___ are optional and are not mandatory so that the program runs.
 
-### Adding window ###
-
-In the adding window the application handles comming shipments by scanning the barcode of the shoebox. You can test the program by taking the barecodes from the ___barcodes json file___. Before adding the shoes to the storage you can easily check how many shoes of each model and size have been added and the check if it maches with the shipping documents. After saving the shoes they are added to the main storage and written to the storage.json file.
-
-### sending window ###
-
-in this window you can also scan barcodes to an entry and the program will tell you how many of each kind you have scanned. By adding the ___asiakas.json___ file to the json file you can generate an invoice and select where the program will save your generated PDF invoice.
-
-## Main window ##
-
-the program generates a pandastable from the json file called storage.json and displays this information.
