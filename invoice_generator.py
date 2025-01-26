@@ -15,6 +15,7 @@ BANK_NUMBER = "FI83 1146 3001 1475 83"
 SWIFT_BIC = "NDEAFIHH"
 
 
+
 def get_invoice_number():
     with open("Text files/invoice_number.txt", "r") as file:
         return file.readline()
@@ -38,10 +39,10 @@ def draw_header(c, width, height):
     c.drawString(width / 2 - 10 * mm, height - 20 * mm, "LASKU")
 
 
-def draw_footer(c, width, height):
+def draw_footer(c, width, height, reference_number):
     # Footer details
     c.setFont("Helvetica", 9)
-    c.drawString(20 * mm, 85, "Pyydämme käyttämään maksaessanne viitenumeroa: 10249")
+    c.drawString(20 * mm, 85, f"Pyydämme käyttämään maksaessanne viitenumeroa: {reference_number}")
     c.line(20 * mm, 75, 200 * mm, 75)
     c.drawString(20 * mm, 60, "RK-AviaTeck Oy")
     c.drawString(20 * mm, 50, "Tahkokatu 1")
@@ -60,6 +61,7 @@ def draw_footer(c, width, height):
 class InvoiceGenerator:
     def __init__(self, items, customer, output_file="exact_invoice.pdf"):
         self.invoice_number = get_invoice_number()  # get the invoice number
+        self.reference_number = self.calculate_reference()
         self.billing_info = None
         self.customer_email = None
         self.customer = customer
@@ -70,6 +72,19 @@ class InvoiceGenerator:
         self.total_excl_vat = 0
         self.vat_total = 0
         self.total_incl_vat = 0
+
+    def calculate_reference(self):
+        list = [7, 3, 1]
+        sum = 0
+
+        for i, number in enumerate(reversed(self.invoice_number)):
+            sum += list[i % 3] * int(number)
+            print(list[i % 3], int(number), sum)
+
+        check = (10 - (sum % 10)) % 10
+        reference = f"{self.invoice_number}{check}"
+
+        return int(reference)
 
     def update_invoice_number(self):
         self.invoice_number = int(self.invoice_number) + 1
@@ -111,9 +126,9 @@ class InvoiceGenerator:
         draw_header(c, width, height)
         self.draw_invoice_details(c, width, height)
         self.draw_item_table(c, width, height)
-        draw_footer(c, width, height)
+        draw_footer(c, width, height, self.reference_number)
 
-        #lastly update the invoice number
+        # lastly update the invoice number
         self.update_invoice_number()
 
         c.save()
@@ -139,7 +154,7 @@ class InvoiceGenerator:
             ["Laskun numero:", self.invoice_number],
             ["Eräpäivä:", DUEDATE],
             ["Viivästyskorko:", "8.0 %"],
-            ["Viitenumero:", "10249"],
+            ["Viitenumero:", self.reference_number],
             ["Maksuehto:", "14 päivää netto"],
             ["Pankki:", BANK_NAME],
             ["Tilinumero:", BANK_NUMBER],

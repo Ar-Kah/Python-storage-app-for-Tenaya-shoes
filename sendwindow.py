@@ -25,6 +25,7 @@ def update_invoice_path(path):
 
 class SendWindow:
     def __init__(self, parent, refresh_callback):
+        self.reformat = []
         self.send_window = tk.Toplevel(parent)
         self.send_window.title("Send Items")
         self.send_window.geometry("400x550")
@@ -314,12 +315,12 @@ class SendWindow:
 
 
     def reformat_data(self):
-        '''
+        """
         Reformat the items from the self.items list to a different data format before
         generating an invoice.
         :return:
-        '''
-        self.reformat = []
+        """
+
         try:
             with open("Jsonfiles/kenka_tiedot.json", 'r') as file:
                 data = json.load(file)
@@ -342,8 +343,6 @@ class SendWindow:
                         # Add the shoe to the reformat list if it's not already there
                         self.reformat.append(details_of_shoe.copy())
 
-
-            print(str(self.reformat))
 
         except FileNotFoundError:
             print("Could not find file")

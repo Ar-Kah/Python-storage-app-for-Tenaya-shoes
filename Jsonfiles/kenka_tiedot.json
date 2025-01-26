@@ -1,61 +1,68 @@
 {
   "Ra": {
-    "description": "Tenaya Ra kiipeilykenkä",
+    "description": "Tenaya Ra kiipeilykenka",
     "quantity": 1,
     "unit": "kpl",
     "price": 73.78
   },
   "Masai": {
-    "description": "Tenaya Masai kiipeilykenkä",
+    "description": "Tenaya Masai kiipeilykenka",
     "quantity": 1,
     "unit": "kpl",
     "price": 73.78
   },
   "Tarifa": {
-    "description": "Tenaya Tarifa kiipeilykenkä",
+    "description": "Tenaya Tarifa kiipeilykenka",
     "quantity": 1,
     "unit": "kpl",
     "price": 84.93
   },
   "Inti": {
-    "description": "Tenaya Inti kiipeilykenkä",
+    "description": "Tenaya Inti kiipeilykenka",
     "quantity": 1,
-    "unit": "kpl"
+    "unit": "kpl",
+    "price": 76.26
   },
   "Iati": {
-    "description": "Tenaya Iati kiipeilykenkä",
+    "description": "Tenaya Iati kiipeilykenka",
     "quantity": 1,
     "unit": "kpl",
     "price": 87.58
   },
   "Oasi": {
-    "description": "Tenaya Oasi kiipeilykenkä",
+    "description": "Tenaya Oasi kiipeilykenka",
     "quantity": 1,
     "unit": "kpl",
     "price": 84.93
   },
   "Tanta": {
-    "description": "Tenaya Tanta kiipeilykenkä",
+    "description": "Tenaya Tanta kiipeilykenka",
     "quantity": 1,
     "unit": "kpl",
     "price": 54.83
   },
   "Mundaka": {
-    "description": "Tenaya Munkaka kiipeilykenkä",
+    "description": "Tenaya Munkaka kiipeilykenka",
     "quantity": 1,
     "unit": "kpl",
     "price": 90.30
   },
   "Oasi LV": {
-    "description": "Tenaya Oasi LV kiipeilykenkä",
+    "description": "Tenaya Oasi LV kiipeilykenka",
     "quantity": 1,
     "unit": "kpl",
     "price": 84.93
   },
   "Mastia": {
-    "description": "Tenaya Mastia kiipeilykenkä",
+    "description": "Tenaya Mastia kiipeilykenka",
     "quantity": 1,
     "unit": "kpl",
     "price": 93.05
+  },
+  "Indalo": {
+    "description": "Tenaya Indalo kiipeilykenka",
+    "quantity": 1,
+    "unit": "kpl",
+    "price": 98.87
   }
 }

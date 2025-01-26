@@ -1,7 +1,7 @@
 import unittest
 import os
-from PyPDF2 import PdfReader  # Ensure PyPDF2 is installed
-from invoice_generator import InvoiceGenerator  # assuming your code is in a file named invoice_generator.py
+from PyPDF2 import PdfReader
+from invoice_generator import InvoiceGenerator
 
 
 class TestInvoiceGenerator(unittest.TestCase):
@@ -19,7 +19,8 @@ class TestInvoiceGenerator(unittest.TestCase):
         )
 
         # Create an instance of InvoiceGenerator with the test data
-        self.generator = InvoiceGenerator(self.items, output_file="test_invoice.pdf")
+        self.generator = InvoiceGenerator(self.items, "Kiipeilyvisio Oy", output_file="lasku.pdf")
+
 
     def test_total_calculation(self):
         # Generate the PDF
@@ -54,6 +55,9 @@ class TestInvoiceGenerator(unittest.TestCase):
             self.assertIn("LASKU", first_page_text)  # Check if the title is present
             self.assertIn("Yhteensä EUR:", first_page_text)  # Check if total label is present
             self.assertIn(f"{self.generator.total:.2f}", first_page_text)  # Check if total amount is correct
+
+    def test_reference_number(self):
+        self.assertEqual(self.generator.reference_number, 10249)
 
     def tearDown(self):
         # Clean up the generated test file after each test
